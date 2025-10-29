@@ -1,7 +1,6 @@
 package ar.edu.unahur.obj2.cazador;
 
 import ar.edu.unahur.obj2.profugo.Iprofugo;
-import ar.edu.unahur.obj2.profugo.Profugo;
 
 public class CazadorUrbano extends Cazador {
 

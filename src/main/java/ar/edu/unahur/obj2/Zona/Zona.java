@@ -14,6 +14,10 @@ public class Zona {
         this.profugos = profugos;
     }
 
+    public Zona(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getNombre() {
         return nombre;
     }

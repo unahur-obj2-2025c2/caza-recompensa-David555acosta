@@ -7,7 +7,6 @@ import java.util.Set;
 
 import ar.edu.unahur.obj2.Zona.Zona;
 import ar.edu.unahur.obj2.profugo.Iprofugo;
-import ar.edu.unahur.obj2.profugo.Profugo;
 
 public abstract class Cazador {
     private String nombre;
@@ -18,6 +17,24 @@ public abstract class Cazador {
     public Cazador(String nombre, Integer experiencia) {
         this.nombre = nombre;
         this.experiencia = experiencia;
+    }
+
+    
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public Integer getExperiencia() {
+        return experiencia;
+    }
+
+    public Set<Iprofugo> getProfugosCapturados() {
+        return profugosCapturados;
+    }
+
+    public Set<Iprofugo> getProfugosIntimidados() {
+        return profugosIntimidados;
     }
 
     public void realizarProcesoCaptura(Zona zona) {
