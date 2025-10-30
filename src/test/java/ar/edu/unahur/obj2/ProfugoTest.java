@@ -1,11 +1,11 @@
 package ar.edu.unahur.obj2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ar.edu.unahur.obj2.Zona.Zona;
 import ar.edu.unahur.obj2.cazador.CazadorRural;
 import ar.edu.unahur.obj2.cazador.CazadorSigiloso;
 import ar.edu.unahur.obj2.cazador.CazadorUrbano;
@@ -35,22 +35,8 @@ public class ProfugoTest {
     Iprofugo conProteccionLegal;
     Iprofugo conEntrenamientoDeElite;
 
-    Zona zona1;
-    Zona zona2;
-
     @BeforeEach
     public void setUp() {
-        cazadorRural1 = new CazadorRural("David", 50);
-
-        cazadorRural2 = new CazadorRural("Pepe", 20);
-
-        cazadorSigiloso1 = new CazadorSigiloso("Rogelio", 60);
-
-        cazadorSigiloso2 = new CazadorSigiloso("Raul", 70);
-
-        cazadorUrbano1 = new CazadorUrbano("Luis", 90);
-
-        cazadorUrbano2 = new CazadorUrbano("Juan", 100);
 
         profugoA = new Profugo(20, 30, true);
 
@@ -62,27 +48,58 @@ public class ProfugoTest {
 
         profugoE = new Profugo(0, 80, true);
 
-        conArtesMarciales = new ArteMarcialDecorator(profugoA);
+        conArtesMarciales = new ArteMarcialDecorator(profugoC);
 
-        conEntrenamientoDeElite = new EntrenamientoDeEliteDecorator(profugoC);
+        conEntrenamientoDeElite = new EntrenamientoDeEliteDecorator(profugoA);
 
         conProteccionLegal = new ProteccionLegalDecorator(profugoD);
-
-        zona1 = new Zona("Zona1");
-        zona2 = new Zona("Zona2");
-
-        zona1.agregarProfugo(conArtesMarciales);
-        zona1.agregarProfugo(profugoB);
-        zona1.agregarProfugo(conEntrenamientoDeElite);
-
-        zona2.agregarProfugo(profugoE);
-        zona2.agregarProfugo(conProteccionLegal);
-
     }
 
     @Test
     void pruebaBasica() {
-        assertEquals("David", cazadorRural1.getNombre());
-        assertEquals(0, cazadorRural1.getProfugosCapturados().size());
+        assertTrue(profugoA.esNervioso().equals(Boolean.TRUE));
+        assertTrue(profugoA.getHabilidad().equals(30));
+        assertTrue(profugoA.getNivelDeInosencia().equals(20));
+        assertEquals(30, profugoA.getHabilidad());
+    }
+
+    @Test
+    void dadoUnProfugoRecibeEntrenamientoDeEliteYDejaDeEstarNervioso() {
+        assertTrue(profugoA.esNervioso().equals(Boolean.TRUE));
+        assertTrue(conEntrenamientoDeElite.esNervioso().equals(Boolean.FALSE));
+        assertEquals(30, conEntrenamientoDeElite.getHabilidad());
+    }
+
+    @Test
+    void dadoUnProfugoRecibeEntrenamientoDeEliteYArtesMarciales() {
+        assertTrue(profugoA.esNervioso().equals(Boolean.TRUE));
+        assertTrue(conEntrenamientoDeElite.esNervioso().equals(Boolean.FALSE));
+
+        ArteMarcialDecorator profugoConArteMarcialYEntrenamientoDeElite = new ArteMarcialDecorator(
+                conEntrenamientoDeElite);
+
+        assertEquals(Boolean.FALSE, profugoConArteMarcialYEntrenamientoDeElite.esNervioso());
+
+        assertEquals(60, profugoConArteMarcialYEntrenamientoDeElite.getHabilidad());
+    }
+
+    @Test
+    void dadoUnProfugoRecibeEntrenamientoDeEliteArtesMarcialesYProteccionLegal() {
+        Iprofugo profugoScope = new Profugo(20, 70, true);
+
+        EntrenamientoDeEliteDecorator profugoScopeRecibeEntrenamientoDeElite = new EntrenamientoDeEliteDecorator(
+                profugoScope);
+
+        ArteMarcialDecorator profugoConEntrenamientoDeEliteRecibeArtesMarciales = new ArteMarcialDecorator(
+                profugoScopeRecibeEntrenamientoDeElite);
+
+        ProteccionLegalDecorator profugoConEntrenamientoYArtesMarcialesRecibeProteccionLegal = new ProteccionLegalDecorator(
+                profugoConEntrenamientoDeEliteRecibeArtesMarciales);
+
+        assertEquals(Boolean.FALSE, profugoConEntrenamientoYArtesMarcialesRecibeProteccionLegal.esNervioso());
+
+        assertEquals(100, profugoConEntrenamientoYArtesMarcialesRecibeProteccionLegal.getHabilidad());
+
+        assertEquals(40, profugoConEntrenamientoYArtesMarcialesRecibeProteccionLegal.getNivelDeInosencia());
     }
 }
