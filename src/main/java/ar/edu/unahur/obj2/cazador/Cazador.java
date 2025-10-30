@@ -19,8 +19,6 @@ public abstract class Cazador {
         this.experiencia = experiencia;
     }
 
-    
-
     public String getNombre() {
         return nombre;
     }
@@ -38,8 +36,10 @@ public abstract class Cazador {
     }
 
     public void realizarProcesoCaptura(Zona zona) {
-        zona.getProfugos().stream().forEach(profugoRecorrido -> evaluarSiCapturarOIntimidar(zona, profugoRecorrido));
-        this.SumarExperiencia(profugosIntimidados);
+        Set<Iprofugo> profugosACapturar = new HashSet<>(zona.getProfugos());
+
+        profugosACapturar.stream()
+                .forEach(profugoRecorrido -> this.evaluarSiCapturarOIntimidar(zona, profugoRecorrido));
     }
 
     private void evaluarSiCapturarOIntimidar(Zona zona, Iprofugo profugo) {
@@ -51,9 +51,9 @@ public abstract class Cazador {
     }
 
     // Acciones
-    private void capturar(Zona zona, Iprofugo profugo) {
-        zona.eliminarProfugo(profugo);
+    public void capturar(Zona zona, Iprofugo profugo) {
         this.profugosCapturados.add(profugo);
+        zona.eliminarProfugo(profugo);
     }
 
     private void intimidar(Iprofugo profugo) {
@@ -74,7 +74,7 @@ public abstract class Cazador {
     protected abstract Boolean condicionEspecifica(Iprofugo profugo);
 
     // Evaluacion entre 2 condiciones
-    private Boolean cumpleCondicionesDeCaptura(Iprofugo profugo) {
+    public Boolean cumpleCondicionesDeCaptura(Iprofugo profugo) {
         return this.condicionGeneral(profugo) && this.condicionEspecifica(profugo);
     }
 
