@@ -1,8 +1,7 @@
 package ar.edu.unahur.obj2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ import ar.edu.unahur.obj2.profugo.Iprofugo;
 import ar.edu.unahur.obj2.profugo.Profugo;
 import ar.edu.unahur.obj2.profugo.ProteccionLegalDecorator;
 
-public class CazadorTest {
+public class AgenciaTest {
     CazadorRural cazadorRural1;
     CazadorRural cazadorRural2;
 
@@ -32,6 +31,8 @@ public class CazadorTest {
     Iprofugo profugoC;
     Iprofugo profugoD;
     Iprofugo profugoE;
+    Iprofugo profugoF;
+    Iprofugo profugoG;
 
     Iprofugo conArtesMarciales;
     Iprofugo conProteccionLegal;
@@ -39,6 +40,8 @@ public class CazadorTest {
 
     Zona zona1;
     Zona zona2;
+
+    Agencia agencia;
 
     @BeforeEach
     public void setUp() {
@@ -66,6 +69,10 @@ public class CazadorTest {
 
         profugoE = new Profugo(0, 80, true);
 
+        profugoF = new Profugo(50, 70, true);
+
+        profugoG = new Profugo(40, 50, false);
+
         conArtesMarciales = new ArteMarcialDecorator(profugoA);
 
         conEntrenamientoDeElite = new EntrenamientoDeEliteDecorator(profugoC);
@@ -73,6 +80,7 @@ public class CazadorTest {
         conProteccionLegal = new ProteccionLegalDecorator(profugoD);
 
         // Zonas
+
         zona1 = new Zona("Zona1");
         zona2 = new Zona("Zona2");
 
@@ -82,33 +90,44 @@ public class CazadorTest {
 
         zona2.agregarProfugo(profugoE);
         zona2.agregarProfugo(conProteccionLegal);
+        zona2.agregarProfugo(profugoF);
+        zona2.agregarProfugo(profugoG);
 
+        agencia = new Agencia();
+        agencia.agregarCazador(cazadorRural1);
+        agencia.agregarCazador(cazadorUrbano2);
     }
 
     @Test
     void pruebaBasica() {
-        assertEquals("David", cazadorRural1.getNombre());
-        assertEquals(0, cazadorRural1.getProfugosCapturados().size());
+        agencia.realizarProcesoCaptura(cazadorRural1, zona1);
+        agencia.realizarProcesoCaptura(cazadorUrbano2, zona2);
+
+        // CazadorRural1: Experiencia : 50
+
+        // Zona1 Profugos:
+
+        // ConArtesMarciales : inosencia 20 , habilidad 60 , EsNervioso
+
+        // Profugo B : inosencia 30 , habilidad 50 , noEsNervioso
+
+        // ConEntrenamientoDeElite: inosencia 60 , habilidad 100 , noEsNervioso
+
+        // CazadorRural : Capturados = 1
+
+
+
+        // CazadorUrbano2: Experiencia = 100
+
+        // Zona 2 Profugos:
+
+        // ProfugoE , Inosencia 0 , habilidad 80 , esNervioso
+
+        // ConProteccionLegal Inosencia 40 , habilidad 100 , esNervioso
+
+        // ProfugoF inosencia 50 , habilidad 70 , esNervioso
+
+        assertEquals(2, agencia.todosLosProfugosCapturados().size());
     }
 
-    @Test
-    void cazadorRuralCazandoenZona1() {
-        assertTrue(cazadorRural1.cumpleCondicionesDeCaptura(conArtesMarciales));
-        assertFalse(cazadorRural1.cumpleCondicionesDeCaptura(conEntrenamientoDeElite));
-        cazadorRural1.realizarProcesoCaptura(zona1);
-
-        assertEquals(1, cazadorRural1.getProfugosCapturados().size());
-        assertEquals(2, cazadorRural1.getProfugosIntimidados().size());
-        // CazadorRural 1 : Experiencia 50
-        // Experiencia > Inosencia
-        // Profugo debe ser nervioso
-
-        // ProfugoConArtesMarciales Inosencia: 20 , esNervioso
-        // ProfugoB Inosencia: 30 , noEsNervioso
-        // ConEntrenamientoDeElite Inosencia :60 , habilidad 100 , NoNervioso
-
-        // Capturados = ProfugoConArtesMarciales , ProfugoB
-        // Intimidados = ConEntrenamientoDeElite
-
-    }
 }

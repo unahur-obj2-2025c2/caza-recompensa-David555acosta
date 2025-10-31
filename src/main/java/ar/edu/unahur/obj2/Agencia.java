@@ -18,6 +18,9 @@ public class Agencia {
         this.cazadoresAgencia = cazadoresAgencia;
     }
 
+    public Agencia() {
+    }
+
     public void agregarCazador(Cazador cazador) {
         cazadoresAgencia.add(cazador);
     }
@@ -32,7 +35,7 @@ public class Agencia {
 
     public Set<Iprofugo> todosLosProfugosCapturados() {
         return (Set<Iprofugo>) cazadoresAgencia.stream().flatMap(cazador -> cazador.getProfugosCapturados().stream())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     public Optional<Iprofugo> profugoMasHabilCapturado() {
